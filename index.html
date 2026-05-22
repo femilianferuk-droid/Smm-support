@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тех Поддержка Vest Smm - Панель управления</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --bg: #f5f6fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        /* Login Page */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 260px;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-link .icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: var(--dark);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .stat-icon {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-card .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd6;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .priority-low { color: #2ecc71; }
+        .priority-medium { color: #f39c12; }
+        .priority-high { color: #e67e22; }
+        .priority-critical { color: #e74c3c; }
+
+        .message-bubble {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .message-bubble.support {
+            background: #e8f4fd;
+            border-left: 4px solid var(--primary);
+        }
+
+        .message-bubble.user {
+            background: #f0f8f0;
+            border-left: 4px solid var(--success);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-header">
+                <div style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
+                <h1>Тех Поддержка</h1>
+                <p>Vest Smm Admin Panel</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" id="username" placeholder="Введите логин" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" id="password" placeholder="Введите пароль" required>
+                </div>
+                <button type="submit" class="login-btn">Войти</button>
+                <div class="error-message" id="loginError"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🛡️ Vest Smm</h2>
+                <p>Панель управления</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" onclick="showSection('overview')">
+                        <span class="icon">📊</span> Обзор
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('tickets')">
+                        <span class="icon">🎫</span> Тикеты
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('users')">
+                        <span class="icon">👥</span> Пользователи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('support')">
+                        <span class="icon">💬</span> Поддержка
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('broadcast')">
+                        <span class="icon">📣</span> Рассылка
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('logs')">
+                        <span class="icon">📋</span> Логи
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('settings')">
+                        <span class="icon">⚙️</span> Настройки
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 id="pageTitle">📊 Обзор</h1>
+                <div class="user-info">
+                    <span>👤 <span id="currentUser">Admin</span></span>
+                    <button class="logout-btn" onclick="logout()">Выйти</button>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overviewSection" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Всего пользователей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎫</div>
+                        <div class="stat-value" id="openTickets">0</div>
+                        <div class="stat-label">Открытых тикетов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="closedTickets">0</div>
+                        <div class="stat-label">Закрытых тикетов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-value" id="totalMessages">0</div>
+                        <div class="stat-label">Всего сообщений</div>
+                    </div>
+                </div>
+                <h3 style="margin: 20px 0;">Последние тикеты</h3>
+                <div id="recentTickets"></div>
+            </div>
+
+            <!-- Tickets Section -->
+            <div id="ticketsSection" class="content-section">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <select id="ticketFilter" onchange="loadTickets()">
+                        <option value="all">Все тикеты</option>
+                        <option value="open">Открытые</option>
+                        <option value="closed">Закрытые</option>
+                        <option value="collaboration">По сотрудничеству</option>
+                    </select>
+                    <select id="priorityFilter" onchange="loadTickets()">
+                        <option value="all">Все приоритеты</option>
+                        <option value="low">Низкий</option>
+                        <option value="medium">Средний</option>
+                        <option value="high">Высокий</option>
+                        <option value="critical">Критический</option>
+                    </select>
+                </div>
+                <div id="ticketsList"></div>
+            </div>
+
+            <!-- Users Section -->
+            <div id="usersSection" class="content-section">
+                <h3>Пользователи бота</h3>
+                <div id="usersList"></div>
+            </div>
+
+            <!-- Support Section -->
+            <div id="supportSection" class="content-section">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="supportUserId" placeholder="ID пользователя" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 10px;">
+                    <button class="btn btn-primary" onclick="addSupport()">Добавить в поддержку</button>
+                    <button class="btn btn-danger" onclick="removeSupport()">Удалить из поддержки</button>
+                </div>
+                <h3>Сотрудники поддержки</h3>
+                <div id="supportList"></div>
+            </div>
+
+            <!-- Broadcast Section -->
+            <div id="broadcastSection" class="content-section">
+                <h3>Рассылка сообщений</h3>
+                <div class="form-group">
+                    <label>Текст сообщения</label>
+                    <textarea id="broadcastMessage" placeholder="Введите текст рассылки..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="sendBroadcast()">📣 Отправить рассылку</button>
+                <div id="broadcastStatus" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Logs Section -->
+            <div id="logsSection" class="content-section">
+                <h3>Логи действий поддержки</h3>
+                <div id="logsList"></div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settingsSection" class="content-section">
+                <h3>Настройки отображаемых имен</h3>
+                <div id="displayNamesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div id="ticketModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Детали тикета</h2>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Auth credentials
+        const ADMIN_CREDENTIALS = {
+            username: 'Vestnik',
+            password: '55337q'
+        };
+
+        // Mock database
+        let db = {
+            users: [],
+            tickets: [],
+            messages: [],
+            supportLogs: [],
+            nextUserId: 1,
+            nextTicketId: 1,
+            nextMessageId: 1,
+            nextLogId: 1
+        };
+
+        // Initialize with some data
+        function initDB() {
+            // Add admin
+            db.users.push({
+                id: db.nextUserId++,
+                telegram_id: 7973988177,
+                username: 'admin',
+                full_name: 'Admin',
+                is_admin: true,
+                is_support: true,
+                support_display_name: 'Администратор',
+                created_at: new Date().toISOString()
+            });
+
+            // Add some test users
+            db.users.push({
+                id: db.nextUserId++,
+                telegram_id: 123456789,
+                username: 'test_user',
+                full_name: 'Иван Петров',
+                is_admin: false,
+                is_support: false,
+                support_display_name: null,
+                created_at: new Date().toISOString()
+            });
+
+            db.users.push({
+                id: db.nextUserId++,
+                telegram_id: 987654321,
+                username: 'support_anna',
+                full_name: 'Анна Смирнова',
+                is_admin: false,
+                is_support: true,
+                support_display_name: 'Анна ТехПоддержка',
+                created_at: new Date().toISOString()
+            });
+
+            // Add some test tickets
+            db.tickets.push({
+                id: db.nextTicketId++,
+                user_id: 2,
+                ticket_number: 'TKT-0001',
+                category: 'Техническая проблема',
+                problem_type: 'Ошибка в работе',
+                priority: 'high',
+                status: 'open',
+                is_collaboration: false,
+                created_at: new Date(Date.now() - 3600000).toISOString()
+            });
+
+            db.tickets.push({
+                id: db.nextTicketId++,
+                user_id: 2,
+                ticket_number: 'TKT-0002',
+                category: 'По сотрудничеству',
+                problem_type: 'Предложение',
+                priority: 'medium',
+                status: 'open',
+                is_collaboration: true,
+                created_at: new Date(Date.now() - 7200000).toISOString()
+            });
+
+            // Add test messages
+            db.messages.push({
+                id: db.nextMessageId++,
+                ticket_id: 1,
+                sender_id: 2,
+                message_text: 'Здравствуйте! У меня проблема с заказом, он не выполняется уже 2 часа.',
+                is_from_user: true,
+                created_at: new Date(Date.now() - 3600000).toISOString()
+            });
+
+            db.messages.push({
+                id: db.nextMessageId++,
+                ticket_id: 1,
+                sender_id: 1,
+                message_text: 'Здравствуйте! Проверим ваш заказ. Напишите номер заказа.',
+                is_from_user: false,
+                created_at: new Date(Date.now() - 1800000).toISOString()
+            });
+
+            // Add test logs
+            db.supportLogs.push({
+                id: db.nextLogId++,
+                support_id: 1,
+                action_type: 'reply',
+                ticket_id: 1,
+                details: 'Ответ в тикет TKT-0001',
+                created_at: new Date(Date.now() - 1800000).toISOString()
+            });
+        }
+
+        // Login handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                errorDiv.style.display = 'none';
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                document.getElementById('currentUser').textContent = username;
+                initDB();
+                showSection('overview');
+            } else {
+                errorDiv.textContent = 'Неверный логин или пароль';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Logout
+        function logout() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            db = { users: [], tickets: [], messages: [], supportLogs: [], nextUserId: 1, nextTicketId: 1, nextMessageId: 1, nextLogId: 1 };
+        }
+
+        // Navigation
+        function showSection(section) {
+            // Update nav
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+
+            // Show selected section
+            const sectionMap = {
+                'overview': 'overviewSection',
+                'tickets': 'ticketsSection',
+                'users': 'usersSection',
+                'support': 'supportSection',
+                'broadcast': 'broadcastSection',
+                'logs': 'logsSection',
+                'settings': 'settingsSection'
+            };
+
+            document.getElementById(sectionMap[section]).classList.add('active');
+
+            // Update page title
+            const titles = {
+                'overview': '📊 Обзор',
+                'tickets': '🎫 Тикеты',
+                'users': '👥 Пользователи',
+                'support': '💬 Поддержка',
+                'broadcast': '📣 Рассылка',
+                'logs': '📋 Логи',
+                'settings': '⚙️ Настройки'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+
+            // Load data
+            switch(section) {
+                case 'overview': loadOverview(); break;
+                case 'tickets': loadTickets(); break;
+                case 'users': loadUsers(); break;
+                case 'support': loadSupport(); break;
+                case 'logs': loadLogs(); break;
+                case 'settings': loadDisplayNames(); break;
+            }
+        }
+
+        // Load Overview
+        function loadOverview() {
+            const openTickets = db.tickets.filter(t => t.status === 'open').length;
+            const closedTickets = db.tickets.filter(t => t.status === 'closed').length;
+
+            document.getElementById('totalUsers').textContent = db.users.length;
+            document.getElementById('openTickets').textContent = openTickets;
+            document.getElementById('closedTickets').textContent = closedTickets;
+            document.getElementById('totalMessages').textContent = db.messages.length;
+
+            // Recent tickets
+            const recent = db.tickets.slice(-5).reverse();
+            let html = '<table><tr><th>Номер</th><th>Категория</th><th>Приоритет</th><th>Статус</th><th>Действия</th></tr>';
+            
+            recent.forEach(ticket => {
+                const user = db.users.find(u => u.id === ticket.user_id);
+                const priorityClass = `priority-${ticket.priority}`;
+                html += `
+                    <tr>
+                        <td><strong>${ticket.ticket_number}</strong></td>
+                        <td>${ticket.category}</td>
+                        <td class="${priorityClass}">${getPriorityName(ticket.priority)}</td>
+                        <td><span class="badge ${ticket.status === 'open' ? 'badge-success' : 'badge-danger'}">${ticket.status === 'open' ? 'Открыт' : 'Закрыт'}</span></td>
+                        <td><button class="btn btn-primary btn-sm" onclick="viewTicket(${ticket.id})">Просмотр</button></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('recentTickets').innerHTML = html;
+        }
+
+        // Load Tickets
+        function loadTickets() {
+            const filter = document.getElementById('ticketFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            
+            let tickets = db.tickets;
+            
+            if (filter === 'open') tickets = tickets.filter(t => t.status === 'open');
+            if (filter === 'closed') tickets = tickets.filter(t => t.status === 'closed');
+            if (filter === 'collaboration') tickets = tickets.filter(t => t.is_collaboration);
+            if (priorityFilter !== 'all') tickets = tickets.filter(t => t.priority === priorityFilter);
+            
+            tickets = tickets.reverse();
+            
+            let html = '<table><tr><th>Номер</th><th>Пользователь</th><th>Категория</th><th>Приоритет</th><th>Статус</th><th>Дата</th><th>Действия</th></tr>';
+            
+            tickets.forEach(ticket => {
+                const user = db.users.find(u => u.id === ticket.user_id);
+                const priorityClass = `priority-${ticket.priority}`;
+                const date = new Date(ticket.created_at).toLocaleString('ru-RU');
+                
+                html += `
+                    <tr>
+                        <td><strong>${ticket.ticket_number}</strong>${ticket.is_collaboration ? ' 🤝' : ''}</td>
+                        <td>${user ? user.full_name : 'Неизвестный'}</td>
+                        <td>${ticket.category}</td>
+                        <td class="${priorityClass}">${getPriorityName(ticket.priority)}</td>
+                        <td><span class="badge ${ticket.status === 'open' ? 'badge-success' : 'badge-danger'}">${ticket.status === 'open' ? 'Открыт' : 'Закрыт'}</span></td>
+                        <td>${date}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="viewTicket(${ticket.id})">📋</button>
+                            ${ticket.status === 'open' ? `<button class="btn btn-success btn-sm" onclick="closeTicket(${ticket.id})">✅</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('ticketsList').innerHTML = html || '<p>Нет тикетов</p>';
+        }
+
+        // View Ticket
+        function viewTicket(ticketId) {
+            const ticket = db.tickets.find(t => t.id === ticketId);
+            if (!ticket) return;
+
+            const user = db.users.find(u => u.id === ticket.user_id);
+            const messages = db.messages.filter(m => m.ticket_id === ticketId);
+
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Номер:</strong> ${ticket.ticket_number}</p>
+                    <p><strong>Пользователь:</strong> ${user ? user.full_name : 'Неизвестный'}</p>
+                    <p><strong>Категория:</strong> ${ticket.category}</p>
+                    <p><strong>Приоритет:</strong> <span class="priority-${ticket.priority}">${getPriorityName(ticket.priority)}</span></p>
+                    <p><strong>Статус:</strong> ${ticket.status === 'open' ? 'Открыт' : 'Закрыт'}</p>
+                </div>
+                <h4>История сообщений:</h4>
+            `;
+
+            messages.forEach(msg => {
+                const sender = db.users.find(u => u.id === msg.sender_id);
+                const senderName = sender ? (msg.is_from_user ? sender.full_name : (sender.support_display_name || sender.full_name)) : 'Неизвестный';
+                const bubbleClass = msg.is_from_user ? 'user' : 'support';
+                
+                html += `
+                    <div class="message-bubble ${bubbleClass}">
+                        <strong>${senderName}</strong>
+                        <p>${msg.message_text}</p>
+                        <div class="message-time">${new Date(msg.created_at).toLocaleString('ru-RU')}</div>
+                    </div>
+                `;
+            });
+
+            if (ticket.status === 'open') {
+                html += `
+                    <div style="margin-top: 20px;">
+                        <textarea id="replyText" placeholder="Введите ответ..."></textarea>
+                        <button class="btn btn-primary" onclick="replyToTicket(${ticketId})" style="margin-top: 10px;">💬 Ответить</button>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalTitle').textContent = `Тикет ${ticket.ticket_number}`;
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('ticketModal').classList.add('active');
+        }
+
+        // Reply to ticket
+        function replyToTicket(ticketId) {
+            const text = document.getElementById('replyText').value;
+            if (!text) return;
+
+            db.messages.push({
+                id: db.nextMessageId++,
+                ticket_id: ticketId,
+                sender_id: 1, // Admin
+                message_text: text,
+                is_from_user: false,
+                created_at: new Date().toISOString()
+            });
+
+            db.supportLogs.push({
+                id: db.nextLogId++,
+                support_id: 1,
+                action_type: 'reply',
+                ticket_id: ticketId,
+                details: `Ответ в тикет ${db.tickets.find(t => t.id === ticketId).ticket_number}`,
+                created_at: new Date().toISOString()
+            });
+
+            alert('Ответ отправлен!');
+            closeModal();
+            loadTickets();
+        }
+
+        // Close ticket
+        function closeTicket(ticketId) {
+            if (confirm('Закрыть тикет?')) {
+                const ticket = db.tickets.find(t => t.id === ticketId);
+                ticket.status = 'closed';
+                
+                db.supportLogs.push({
+                    id: db.nextLogId++,
+                    support_id: 1,
+                    action_type: 'close_ticket',
+                    ticket_id: ticketId,
+                    details: `Закрытие тикета ${ticket.ticket_number}`,
+                    created_at: new Date().toISOString()
+                });
+
+                loadTickets();
+            }
+        }
+
+        // Load Users
+        function loadUsers() {
+            let html = '<table><tr><th>ID</th><th>Telegram ID</th><th>Имя</th><th>Username</th><th>Роль</th><th>Дата регистрации</th></tr>';
+            
+            db.users.forEach(user => {
+                const date = new Date(user.created_at).toLocaleString('ru-RU');
+                html += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.telegram_id}</td>
+                        <td>${user.full_name}</td>
+                        <td>@${user.username || 'нет'}</td>
+                        <td>
+                            ${user.is_admin ? '<span class="badge badge-danger">Админ</span> ' : ''}
+                            ${user.is_support ? '<span class="badge badge-info">Поддержка</span>' : '<span class="badge badge-warning">Пользователь</span>'}
+                        </td>
+                        <td>${date}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('usersList').innerHTML = html;
+        }
+
+        // Load Support
+        function loadSupport() {
+            const supportUsers = db.users.filter(u => u.is_support);
+            
+            let html = '<table><tr><th>ID</th><th>Имя</th><th>Username</th><th>Отображаемое имя</th><th>Действия</th></tr>';
+            
+            supportUsers.forEach(user => {
+                html += `
+                    <tr>
+                        <td>${user.telegram_id}</td>
+                        <td>${user.full_name}</td>
+                        <td>@${user.username || 'нет'}</td>
+                        <td>${user.support_display_name || 'Не задано'}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="setDisplayName(${user.telegram_id})">✏️ Имя</button>
+                            <button class="btn btn-danger btn-sm" onclick="removeSupportUser(${user.telegram_id})">❌</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('supportList').innerHTML = html || '<p>Нет сотрудников поддержки</p>';
+        }
+
+        // Add support
+        function addSupport() {
+            const userId = parseInt(document.getElementById('supportUserId').value);
+            if (!userId) return alert('Введите ID пользователя');
+
+            let user = db.users.find(u => u.telegram_id === userId);
+            if (!user) {
+                user = {
+                    id: db.nextUserId++,
+                    telegram_id: userId,
+                    username: '',
+                    full_name: 'Новый пользователь',
+                    is_admin: false,
+                    is_support: true,
+                    support_display_name: null,
+                    created_at: new Date().toISOString()
+                };
+                db.users.push(user);
+            } else {
+                user.is_support = true;
+            }
+
+            document.getElementById('supportUserId').value = '';
+            loadSupport();
+            alert('Пользователь добавлен в поддержку!');
+        }
+
+        // Remove support
+        function removeSupport() {
+            const userId = parseInt(document.getElementById('supportUserId').value);
+            if (!userId) return alert('Введите ID пользователя');
+
+            const user = db.users.find(u => u.telegram_id === userId);
+            if (user) {
+                user.is_support = false;
+                document.getElementById('supportUserId').value = '';
+                loadSupport();
+                alert('Пользователь удален из поддержки!');
+            }
+        }
+
+        function removeSupportUser(telegramId) {
+            const user = db.users.find(u => u.telegram_id === telegramId);
+            if (user && confirm('Удалить пользователя из поддержки?')) {
+                user.is_support = false;
+                loadSupport();
+            }
+        }
+
+        // Set display name
+        function setDisplayName(telegramId) {
+            const name = prompt('Введите отображаемое имя:');
+            if (name) {
+                const user = db.users.find(u => u.telegram_id === telegramId);
+                if (user) {
+                    user.support_display_name = name;
+                    loadSupport();
+                    loadDisplayNames();
+                }
+            }
+        }
+
+        // Load Display Names
+        function loadDisplayNames() {
+            const supportUsers = db.users.filter(u => u.is_support);
+            
+            let html = '<table><tr><th>Имя</th><th>Отображаемое имя</th><th>Действия</th></tr>';
+            
+            supportUsers.forEach(user => {
+                html += `
+                    <tr>
+                        <td>${user.full_name}</td>
+                        <td>${user.support_display_name || 'Не задано'}</td>
+                        <td><button class="btn btn-primary btn-sm" onclick="setDisplayName(${user.telegram_id})">✏️ Изменить</button></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('displayNamesList').innerHTML = html || '<p>Нет сотрудников поддержки</p>';
+        }
+
+        // Send Broadcast
+        function sendBroadcast() {
+            const message = document.getElementById('broadcastMessage').value;
+            if (!message) return alert('Введите текст рассылки');
+
+            let successCount = 0;
+            db.users.forEach(user => {
+                // Simulate sending
+                successCount++;
+            });
+
+            document.getElementById('broadcastStatus').innerHTML = `
+                <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 10px;">
+                    ✅ Рассылка завершена! Отправлено ${successCount} пользователям.
+                </div>
+            `;
+            document.getElementById('broadcastMessage').value = '';
+        }
+
+        // Load Logs
+        function loadLogs() {
+            const logs = [...db.supportLogs].reverse();
+            
+            let html = '<table><tr><th>Время</th><th>Сотрудник</th><th>Действие</th><th>Детали</th></tr>';
+            
+            logs.forEach(log => {
+                const user = db.users.find(u => u.id === log.support_id);
+                const date = new Date(log.created_at).toLocaleString('ru-RU');
+                const actionNames = {
+                    'view_ticket': '👁 Просмотр тикета',
+                    'reply': '💬 Ответ',
+                    'reply_media': '📎 Медиа-ответ',
+                    'close_ticket': '🔒 Закрытие тикета'
+                };
+                
+                html += `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${user ? user.full_name : 'Неизвестный'}</td>
+                        <td>${actionNames[log.action_type] || log.action_type}</td>
+                        <td>${log.details || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</table>';
+            document.getElementById('logsList').innerHTML = html || '<p>Логи пусты</p>';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('ticketModal').classList.remove('active');
+        }
+
+        // Helper functions
+        function getPriorityName(priority) {
+            const names = {
+                'low': '🟢 Низкий',
+                'medium': '🟡 Средний',
+                'high': '🟠 Высокий',
+                'critical': '🔴 Критический'
+            };
+            return names[priority] || priority;
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('ticketModal')) {
+                closeModal();
+            }
+        }
+
+        // Enter key for login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
